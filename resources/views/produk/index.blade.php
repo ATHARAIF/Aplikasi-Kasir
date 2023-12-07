@@ -15,22 +15,20 @@
         <div class="box">
             <div class="box-header with-border">
                 <div class="btn-group">
-                    <button onclick="addForm('{{ route('produk.store') }}')" class="btn btn-success btn-xs btn-flat"><i class="fa fa-plus-circle">
-                    </i> Tambah</button>
-                    <button onclick="deleteSelected('{{ route('produk.delete_selected') }}')" class="btn btn-danger btn-xs btn-flat"><i class="fa fa-trash">
-                    </i> Hapus</button>
+                    <button onclick="addForm('{{ route('produk.store') }}')" class="btn btn-success btn-xs btn-flat"><i class="fa fa-plus-circle"></i> Tambah</button>
+                    <button onclick="deleteSelected('{{ route('produk.delete_selected') }}')" class="btn btn-danger btn-xs btn-flat"><i class="fa fa-trash"></i> Hapus</button>
                 </div>
             </div>
             <div class="box-body table-responsive">
-                <form action="" class="form-produk">
+                <form action="" method="post" class="form-produk">
                     @csrf
                     <table class="table table-stiped table-bordered">
                         <thead>
-                            <th>
+                            <th width="5%">
                                 <input type="checkbox" name="select_all" id="select_all">
                             </th>
                             <th width="5%">No</th>
-                            <th>Kode </th>
+                            <th>Kode</th>
                             <th>Nama</th>
                             <th>Kategori</th>
                             <th>Merk</th>
@@ -61,7 +59,7 @@
             serverSide: true,
             autoWidth: false,
             ajax: {
-                url: "{{ route('produk.data') }}",
+                url: '{{ route('produk.data') }}',
             },
             columns: [
                 {data: 'select_all', searchable: false, sortable: false},
@@ -92,7 +90,7 @@
             }
         });
 
-        $('[name=select_all]').on('click', function(){
+        $('[name=select_all]').on('click', function () {
             $(':checkbox').prop('checked', this.checked);
         });
     });
@@ -146,15 +144,17 @@
                     return;
                 });
         }
-    function deleteSelected(url){
-        if($('input:checked').length > 1){
+    }
+
+    function deleteSelected(url) {
+        if ($('input:checked').length > 1) {
             if (confirm('Yakin ingin menghapus data terpilih?')) {
                 $.post(url, $('.form-produk').serialize())
                     .done((response) => {
                         table.ajax.reload();
                     })
                     .fail((errors) => {
-                        alert('Tidak dapat menghapus data')
+                        alert('Tidak dapat menghapus data');
                         return;
                     });
             }
@@ -162,7 +162,6 @@
             alert('Pilih data yang akan dihapus');
             return;
         }
-    }
     }
 </script>
 @endpush

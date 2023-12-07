@@ -116,7 +116,7 @@ class ProdukController extends Controller
     public function deleteSelected(Request $request)
     {
         foreach ($request->id_produk as $id){
-            $produk = Produk::fint($id);
+            $produk = Produk::find($id);
             $produk -> delete();
         }
         return response(null,204);
