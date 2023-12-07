@@ -20,11 +20,25 @@ class ProdukController extends Controller
 
     public function data()
     {
-        $produk = Produk::orderBy('id_produk', 'desc')->get();
+        $produk = Produk::leftJoin('kategori','kategori.id_kategori','produk.id_kategori')
+            ->select('produk.*','nama_kategori')
+            ->orderBy('kode_produk', 'asc')->get();
 
         return datatables()
             ->of($produk)
             ->addIndexColumn()
+            ->addColumn('kode_produk', function ($produk){
+                return "<span class='label label-success'>". $produk->kode_produk."</span>";
+            })
+            ->addColumn('harga_beli', function ($produk){
+                return format_uang($produk->harga_beli);
+            })
+            ->addColumn('harga_jual', function ($produk){
+                return format_uang($produk->harga_jual);
+            })
+            ->addColumn('stok', function ($produk){
+                return format_uang($produk->stok);
+            })
             ->addColumn('aksi', function ($produk) {
                 return '
                 <div class="btn-group">
@@ -33,7 +47,7 @@ class ProdukController extends Controller
                 </div>
                 ';
             })
-            ->rawColumns(['aksi'])
+            ->rawColumns(['aksi','kode_produk'])
             ->make(true);
     }
     /**
@@ -49,8 +63,8 @@ class ProdukController extends Controller
      */
     public function store(Request $request)
     {
-        $produk = Produk::lastest()->first();
-        $request['kode_produk'] = 'P-'. tambah_nol_didepan($produk->id,6);
+        $produk = Produk::latest()->first() ?? new Produk();
+        $request['kode_produk'] = 'P'. tambah_nol_didepan($produk->id_produk+1, 6);
         
         $produk = Produk::create($request->all());
 
@@ -79,9 +93,8 @@ class ProdukController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $produk = produk::find($id);
-        $produk->nama_produk = $request->nama_produk;
-        $produk->Update();
+        $produk = Produk::find($id);
+        $produk->update($request->all());
 
         return response()->json('Data Berhasil Disimpan',200);
     }
@@ -91,7 +104,7 @@ class ProdukController extends Controller
      */
     public function destroy(string $id)
     {
-        $produk = produk::find($id);
+        $produk = Produk::find($id);
         $produk->delete();
 
         return response (null, 204);
