@@ -56,7 +56,7 @@
                 {data: 'DT_RowIndex', searchable: false, sortable: false},
                 {data: 'kode_produk'},
                 {data: 'nama_produk'},
-                {data: 'kategori'},
+                {data: 'nama_kategori'},
                 {data: 'merk'},
                 {data: 'harga_beli'},
                 {data: 'harga_jual'},
@@ -103,6 +103,12 @@
         $.get(url)
             .done((response) => {
                 $('#modal-form [name=nama_produk]').val(response.nama_produk);
+                $('#modal-form [name=id_kategori]').val(response.id_kategori);
+                $('#modal-form [name=merk]').val(response.merk);
+                $('#modal-form [name=harga_beli]').val(response.harga_beli);
+                $('#modal-form [name=harga_jual]').val(response.harga_jual);
+                $('#modal-form [name=diskon]').val(response.diskon);
+                $('#modal-form [name=stok]').val(response.stok);
             })
             .fail((errors) => {
                 alert('Tidak dapat menampilkan data');
